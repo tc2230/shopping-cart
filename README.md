@@ -30,4 +30,4 @@
 
 3. **確認測試結果:**：
    若無異常應可見測試結果如下圖，包含case_A, case_B, 及其他小功能測試
-   ![image]([https://github.com/user-attachments/assets/67ea61fc-8d75-43c9-bab7-3a6ccb0ea3ea](https://github.com/user-attachments/assets/9002ed4d-9dc2-4e10-bd53-6bf4c7f04938))
+   ![image](https://github.com/user-attachments/assets/9002ed4d-9dc2-4e10-bd53-6bf4c7f04938)
