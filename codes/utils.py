@@ -17,7 +17,7 @@ def parse_discount(text):
 
 def parse_coupon(text):
     elements = text.split(" ")
-    return Coupon(elements[0], elements[1], elements[2])
+    return Coupon(elements[0], elements[1], elements[2], elements[3])
 
 def parse_product(text):
     elements = re.split(r'\*|\:', text)
@@ -25,6 +25,10 @@ def parse_product(text):
     name = elements[1]
     price = float(elements[2])
     return (quantity, name, price)
+
+def parse_user(text):
+    elements = text.split(" ")
+    return elements[0]
 
 def read_input(path):
     # 從檔案讀取輸入
@@ -66,6 +70,10 @@ def read_input(path):
         checkout_date = lines[i]
         i += 1
 
+        # 讀取卡號
+        user_id = parse_user(lines[i])
+        i += 1
+
         # 讀取coupon
         if lines[i] != '':
             coupon = parse_coupon(lines[i])
@@ -79,4 +87,4 @@ def read_input(path):
             output = lines[i+1]
             break
 
-    return discounts, cart_items, checkout_date, coupon, output
+    return discounts, cart_items, checkout_date, user_id, coupon, output

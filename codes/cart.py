@@ -9,12 +9,19 @@ class CartItem:
         self.price = price
         self.category = category
 
+class CartUser:
+    def __init__(self, user_id: str, discount_rate: float):
+        self.user_id = user_id
+        self.discount_rate = discount_rate
+
 class Cart:
     def __init__(self):
         self.items = {}
         self.coupon = None
         self.discounts = {}
         self.checkout_date = None
+        self.user = None
+        self.category_amount = {}
 
     def set_checkout_date(self, check_date: str):
         self.checkout_date = datetime.strptime(check_date, "%Y.%m.%d").date()
@@ -55,7 +62,7 @@ class Cart:
         self.discounts[discount.category] = discount
 
     def calculate_amount(self):
-        amount = 0
+        # amount = 0
         # 逐商品確認是否需要套用折扣
         for item in self.items.values():
             cat = item.category
@@ -67,14 +74,27 @@ class Cart:
 
             # 若有套用對應類別的折扣且在有效期間，則給予折扣
             if discount and discount.is_valid(self.checkout_date):
-                amount += (q * price) * discount.rate
+                item_value = (q * price) * discount.rate
             else:
-                amount += q * price
+                item_value = q * price
 
-        # 最後套用滿額折價券
+            # 加入對應類別的累計金額
+            if cat in self.category_amount:
+                self.category_amount[cat] += item_value
+            else:
+                self.category_amount[cat] = item_value
+
+        # 套用滿額折價券(by類別)
         coupon = self.coupon
-        if coupon and coupon.is_valid(self.checkout_date):
-            if amount >= self.coupon.threshold:
-                amount -= self.coupon.discount
+        if (coupon and coupon.is_valid(self.checkout_date) and coupon.category in self.category_amount):
+            if self.category_amount[coupon.category] >= coupon.threshold:
+                self.category_amount[coupon.category] -= coupon.discount
+
+        # 最後套用等級折扣
+        amount = sum(self.category_amount.values()) # 先加總個類別商品金額
+        amount *= self.user.discount_rate # 取得該user等級對應的折扣
 
         return round(amount, 2)
+
+    def set_user(self, user_id: str, discount_rate: float):
+        self.user = CartUser(user_id, discount_rate)

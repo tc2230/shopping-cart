@@ -3,19 +3,23 @@ from codes.utils import *
 from codes.cart import Cart, CartItem
 from codes.promotion import Discount, Coupon
 from codes.product_service import ProductService
+from codes.user_service import UserService
 
 if __name__ == "__main__":
     # load data
-    with open('./products/products.json', 'r') as f:
-        data = json.loads(f.read())
+    with open('./data/products.json', 'r') as f:
+        product_data = json.loads(f.read())
+    with open('./data/user_discount.json', 'r') as f:
+        user_discount_data = json.loads(f.read())
 
-    # create product manager and cart
-    product_service = ProductService(data)
+    # create product service, user service and cart
+    product_service = ProductService(product_data)
+    user_service = UserService(user_discount_data)
     cart = Cart()
 
     # read input
-    path = './test_input/case_a.txt'
-    discounts, cart_items, checkout_date, coupon, output = read_input(path)
+    path = './test_input/case_c.txt'
+    discounts, cart_items, checkout_date, user_id, coupon, output = read_input(path)
 
     # load input to cart instance
     # add discount
@@ -33,5 +37,9 @@ if __name__ == "__main__":
 
     # set coupon
     cart.set_coupon(coupon)
+
+    # set user
+    user_discount_rate = user_service.get_discount_rate(user_id)
+    cart.set_user(user_id, user_discount_rate)
 
     print(cart.calculate_amount())

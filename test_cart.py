@@ -6,6 +6,7 @@ from codes.utils import round
 from codes.cart import Cart, CartItem
 from codes.promotion import Discount, Coupon
 from codes.product_service import ProductService
+from codes.user_service import UserService
 
 class TestCart:
     def test_add_item(self):
@@ -32,7 +33,7 @@ class TestCart:
 
     def test_set_coupon(self):
         cart = Cart()
-        coupon = Coupon("2024.01.01", 100, 10)
+        coupon = Coupon("2024.01.01", 100, 10, "電子")
         cart.set_coupon(coupon)
         assert cart.coupon == coupon
 
@@ -54,6 +55,7 @@ class TestCart:
         cart = Cart()
         cart.add_item("ipad", 2, 2399.0, "電子")
         cart.set_checkout_date("2024.01.01")
+        cart.set_user('U1', 1.00)
         assert cart.calculate_amount() == Decimal('4798.00')
 
     def test_calculate_amount_with_discount(self):
@@ -62,14 +64,16 @@ class TestCart:
         cart.set_checkout_date("2024.01.01")
         discount = Discount("2024.01.01", 0.8, "fruit")
         cart.add_discount(discount)
+        cart.set_user('U1', 1.00)
         assert cart.calculate_amount() == 16.00
 
     def test_calculate_amount_with_coupon(self):
         cart = Cart()
         cart.add_item("ipad", 1, 2000.0, "電子")
         cart.set_checkout_date("2024.01.01")
-        coupon = Coupon("2024.01.01", 2000, 200)
+        coupon = Coupon("2024.01.01", 2000, 200, "電子")
         cart.set_coupon(coupon)
+        cart.set_user('U1', 1.00)
         assert cart.calculate_amount() == Decimal('1800.00')
 
     def test_calculate_amount_with_discount_and_coupon(self):
@@ -78,8 +82,9 @@ class TestCart:
         cart.set_checkout_date("2024.01.01")
         discount = Discount("2024.01.01", 0.8, "電子")
         cart.add_discount(discount)
-        coupon = Coupon("2024.01.01", 1000, 100)
+        coupon = Coupon("2024.01.01", 1000, 100, "電子")
         cart.set_coupon(coupon)
+        cart.set_user('U1', 1.00)
         assert cart.calculate_amount() == Decimal('1500.00')
 
     def test_calculate_amount_with_discount_expired(self):
@@ -88,14 +93,16 @@ class TestCart:
         cart.set_checkout_date("2024.01.01")
         discount = Discount("2023.12.31", 0.8, "電子")
         cart.add_discount(discount)
+        cart.set_user('U1', 1.00)
         assert cart.calculate_amount() == Decimal('2000.00')
 
     def test_calculate_amount_with_coupon_expired(self):
         cart = Cart()
         cart.add_item("ipad", 1, 2000.0, "電子")
         cart.set_checkout_date("2024.01.01")
-        coupon = Coupon("2023.12.31", 2000, 200)
+        coupon = Coupon("2023.12.31", 2000, 200, "電子")
         cart.set_coupon(coupon)
+        cart.set_user('U1', 1.00)
         assert cart.calculate_amount() == Decimal('2000.00')
 
     def test_calculate_amount_with_different_category_discount(self):
@@ -107,6 +114,7 @@ class TestCart:
         discount_drink = Discount("2024.01.01", 0.5, "酒類")
         cart.add_discount(discount_3c)
         cart.add_discount(discount_drink)
+        cart.set_user('U1', 1.00)
         assert cart.calculate_amount() == Decimal('1750.00')
 
     def test_calculate_amount_with_different_category_discount_and_coupon(self):
@@ -118,14 +126,16 @@ class TestCart:
         discount_drink = Discount("2024.01.01", 0.5, "酒類")
         cart.add_discount(discount_3c)
         cart.add_discount(discount_drink)
-        coupon = Coupon("2024.01.01", 1000, 100)
+        coupon = Coupon("2024.01.01", 1000, 100, "電子")
         cart.set_coupon(coupon)
+        cart.set_user('U1', 1.00)
         assert cart.calculate_amount() == Decimal('1650.00')
 
     def test_calculate_amount_with_coupon_not_meet_threshold(self):
         cart = Cart()
         cart.add_item("ipad", 1, 2000.0, "電子")
         cart.set_checkout_date("2024.01.01")
-        coupon = Coupon("2024.01.01", 3000, 300)
+        coupon = Coupon("2024.01.01", 3000, 300, "電子")
         cart.set_coupon(coupon)
+        cart.set_user('U1', 1.00)
         assert cart.calculate_amount() == Decimal('2000.00')

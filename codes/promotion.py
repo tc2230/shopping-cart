@@ -10,10 +10,11 @@ class Promotion:
         return self.valid_date >= date_to_check
 
 class Coupon(Promotion):
-    def __init__(self, valid_date, threshold, discount):
+    def __init__(self, valid_date, threshold, discount, category):
         super().__init__(valid_date)
         self.threshold = float(threshold)
         self.discount = float(discount)
+        self.category = category
 
 class Discount(Promotion):
     def __init__(self, valid_date, rate, category):
