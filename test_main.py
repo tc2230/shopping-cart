@@ -7,8 +7,8 @@ from codes.product_service import ProductService
 from codes.user_service import UserService
 
 @pytest.mark.parametrize("path, expected_amount", [
-    # ("./test_input/case_a.txt", Decimal('3083.60')),
-    # ("./test_input/case_b.txt", Decimal('43.54')),
+    ("./test_input/case_a.txt", Decimal('3083.60')),
+    ("./test_input/case_b.txt", Decimal('43.54')),
     ("./test_input/case_c.txt", Decimal('2889.57')),
 
 ])
